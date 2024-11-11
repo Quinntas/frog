@@ -3,15 +3,15 @@ from typing import Optional
 from generic.condition import Condition
 from generic.conditions.eq import EQ
 from generic.connection import Connection
+from generic.query import Query
 from generic.typings import OptionalSelectedFieldsType, OptionalTableType, OptionalConditionType
 from utils.get_fields_from_table import get_fields_from_table
 
 
-class SelectQuery:
+class SelectQuery(Query):
     def __init__(self, connection: Connection, selected_fields: OptionalSelectedFieldsType = None):
-        self._connection: Connection = connection
+        super().__init__(connection)
         self._selected_fields: OptionalSelectedFieldsType = selected_fields
-        self._table: OptionalTableType = None
         self._where_condition: OptionalConditionType = None
         self._limit: Optional[int] = None
         self._offset: Optional[int] = None

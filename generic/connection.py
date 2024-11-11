@@ -16,6 +16,10 @@ class Connection(ABC):
         from generic.queries.select import SelectQuery
         return SelectQuery(self, selected_fields)
 
+    def insert(self):
+        from generic.queries.insert import InsertQuery
+        return InsertQuery(self)
+
     def create_tables_from_schema(self):
         query = ""
         for table in self.schema:

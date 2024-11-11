@@ -47,3 +47,9 @@ print(query_all_todos)
 
 query_all_todos_with_pagination = db.select().from_table(TodoTable).limit(10).offset(0).execute()
 print(query_all_todos_with_pagination)
+
+insert_user = db.insert().into(UserTable).values({
+    'email': 'caio@gmail.com',
+    'password': '123456',
+}).execute()
+print(insert_user)
