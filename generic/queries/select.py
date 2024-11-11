@@ -53,4 +53,4 @@ class SelectQuery:
         if self.offset is not None:
             query += f" OFFSET {self.offset}"
 
-        return query, self.where_condition.value
+        return query, self.where_condition.value if self.where_condition is not None else None

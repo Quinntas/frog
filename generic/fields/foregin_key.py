@@ -1,11 +1,14 @@
 from generic.field import Field
-from generic.typings import TableType
+from generic.table import Table
 
 
-class ForeignKey:
+class ForeignKey(Field):
     def __init__(self,
-                 table: TableType,
-                 field: Field
-                 ):
-        self.table: TableType = table
+                 field_name: str,
+                 table: Table,
+                 field: Field,
+                 nullable: bool = False,
+                 ) -> None:
+        super().__init__(name=field_name, field_type=field.field_type, nullable=nullable)
         self.field: Field = field
+        self.table: Table = table

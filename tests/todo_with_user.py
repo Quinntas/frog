@@ -8,20 +8,20 @@ from postgres.pg_connection import Postgres
 
 
 class UserTable(Table):
-    id = Serial('id', primary_key=True)
-    email = Varchar('email', 255)
-    password = Varchar('password', 255)
-    created_at = Timestamp('created_at', auto_now_add=True)
+    id = Serial('id', primary_key=True, nullable=False)
+    email = Varchar('email', 255, nullable=False)
+    password = Varchar('password', 255, nullable=False)
+    created_at = Timestamp('created_at', auto_now_add=True, nullable=False)
 
     class Meta:
         table_name = 'users'
 
 
 class TodoTable(Table):
-    id = Serial('id', primary_key=True)
-    title = Varchar('title', 255)
-    user_id = ForeignKey(UserTable, UserTable.id)
-    created_at = Timestamp('created_at', auto_now_add=True)
+    id = Serial('id', primary_key=True, nullable=False)
+    title = Varchar('title', 255, nullable=False)
+    user_id = ForeignKey('user_id', UserTable, UserTable.id, nullable=False)
+    created_at = Timestamp('created_at', auto_now_add=True, nullable=False)
 
     class Meta:
         table_name = 'todos'
@@ -29,6 +29,8 @@ class TodoTable(Table):
 
 db = Postgres('postgresql://localhost:5432')
 
-query = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
+query_all_users = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
+print(query_all_users)
 
-print(query)
+query_all_todos = db.select().from_table(TodoTable).execute()
+print(query_all_todos)
