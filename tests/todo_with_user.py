@@ -53,3 +53,6 @@ insert_user = db.insert().into(UserTable).values({
     'password': '123456',
 }).execute()
 print(insert_user)
+
+update_user = db.update().table(UserTable).set(UserTable.email, 'caio2@mgial.com').where(eq(UserTable.id, 1)).execute()
+print(update_user)

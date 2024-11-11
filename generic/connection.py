@@ -20,6 +20,10 @@ class Connection(ABC):
         from generic.queries.insert import InsertQuery
         return InsertQuery(self)
 
+    def update(self):
+        from generic.queries.update import UpdateQuery
+        return UpdateQuery(self)
+
     def create_tables_from_schema(self):
         query = ""
         for table in self.schema:
