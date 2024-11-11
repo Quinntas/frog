@@ -26,6 +26,6 @@ class SelectQuery:
 
         if self.where_condition is not None:
             if isinstance(self.where_condition, EQ):
-                where = f"WHERE {self.where_condition.field.name} = {self.where_condition.value}"
+                where = f"WHERE {self.where_condition.field.name} = ?"
 
-        return f"""SELECT * FROM {table_name} {where}"""
+        return f"""SELECT * FROM {table_name} {where}""", self.where_condition.value
