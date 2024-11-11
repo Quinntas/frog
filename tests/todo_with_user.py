@@ -20,7 +20,7 @@ class UserTable(Table):
 class TodoTable(Table):
     id = Serial('id', primary_key=True, nullable=False)
     title = Varchar('title', 255, nullable=False)
-    user_id = ForeignKey('user_id', UserTable, UserTable.id, nullable=False)
+    user_id = ForeignKey('user_id', UserTable.id, nullable=False)
     created_at = Timestamp('created_at', auto_now_add=True, nullable=False)
 
     class Meta:
@@ -29,8 +29,16 @@ class TodoTable(Table):
 
 db = Postgres('postgresql://localhost:5432')
 
-query_all_users = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
-print(query_all_users)
+query_user = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
+print(query_user)
+
+query_user_with_custom_select = db.select({
+    "bilau_id": UserTable.id,
+}).from_table(UserTable).where(eq(UserTable.id, 1)).execute()
+print(query_user_with_custom_select)
 
 query_all_todos = db.select().from_table(TodoTable).execute()
 print(query_all_todos)
+
+query_all_todos_with_pagination = db.select().from_table(TodoTable).limit(10).offset(0).execute()
+print(query_all_todos_with_pagination)
