@@ -27,7 +27,12 @@ class TodoTable(Table):
         table_name = 'todos'
 
 
-db = Postgres('postgresql://localhost:5432')
+db = Postgres('postgresql://localhost:5432', [
+    UserTable,
+    TodoTable,
+])
+
+print(db.create_tables_from_schema())
 
 query_user = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
 print(query_user)
