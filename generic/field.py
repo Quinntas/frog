@@ -1,5 +1,6 @@
 # generic/field.py
-from typing import Optional, TYPE_CHECKING
+from collections.abc import Callable
+from typing import Optional, TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from generic.table import Table
@@ -16,3 +17,8 @@ class Field:
         self.field_type: str = field_type
         self.nullable: bool = nullable
         self.table: Optional['Table'] = table
+        self.default_value_fn: Optional[Callable[[], Any]] = None
+
+    def default(self, default_value_fn: Callable[[], Any]) -> 'Field':
+        self.default_value_fn = default_value_fn
+        return self

@@ -24,16 +24,12 @@ class UpdateQuery(Query):
         return self
 
     def execute(self):
-        table_name = self._table.Meta.table_name
         set_clause = ', '.join([f"{field.name} = ?" for field in self._set_values.keys()])
-        query = f"UPDATE {table_name} SET {set_clause}"
-
-        if self._where_condition is not None:
-            if isinstance(self._where_condition, EQ):
-                query += f" WHERE {self._where_condition.field.name} = ?"
+        query = f"UPDATE {self._table.Meta.table_name} SET {set_clause}"
 
         parameters = list(self._set_values.values())
-        if self._where_condition is not None:
+        if self._where_condition is not None and isinstance(self._where_condition, EQ):
+            query += f" WHERE {self._where_condition.field.name} = ?"
             parameters.append(self._where_condition.value)
 
         return query, tuple(parameters)

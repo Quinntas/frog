@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from generic.conditions.eq import eq
 from generic.fields.foregin_key import ForeignKey
 from generic.fields.serial import Serial
@@ -9,6 +11,7 @@ from postgres.pg_connection import Postgres
 
 class UserTable(Table):
     id = Serial('id', primary_key=True, nullable=False)
+    pid = Varchar('pid', 255, nullable=False).default(uuid4().__str__)
     email = Varchar('email', 255, nullable=False)
     password = Varchar('password', 255, nullable=False)
     created_at = Timestamp('created_at', auto_now_add=True, nullable=False)

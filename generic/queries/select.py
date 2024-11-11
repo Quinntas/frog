@@ -35,19 +35,21 @@ class SelectQuery(Query):
     def execute(self):
         table_name = self._table.Meta.table_name
 
-        if self._selected_fields is None:
-            selected_fields = [field.name for field in get_fields_from_table(self._table)]
-        else:
-            selected_fields = [
+        selected_fields = (
+            [field.name for field in get_fields_from_table(self._table)]
+            if self._selected_fields is None
+            else [
                 f"{field.table.Meta.table_name}.{field.name} as {field_alias}"
                 for field_alias, field in self._selected_fields.items()
             ]
+        )
 
-        query = f"""SELECT {', '.join(selected_fields)} FROM {table_name}"""
+        query = f"SELECT {', '.join(selected_fields)} FROM {table_name}"
 
-        if self._where_condition is not None:
-            if isinstance(self._where_condition, EQ):
-                query += f" WHERE {self._where_condition.field.name} = ?"
+        parameters = []
+        if self._where_condition is not None and isinstance(self._where_condition, EQ):
+            query += f" WHERE {self._where_condition.field.name} = ?"
+            parameters.append(self._where_condition.value)
 
         if self._limit is not None:
             query += f" LIMIT {self._limit}"
@@ -55,4 +57,4 @@ class SelectQuery(Query):
         if self._offset is not None:
             query += f" OFFSET {self._offset}"
 
-        return query, self._where_condition.value if self._where_condition is not None else None
+        return query, tuple(parameters)
