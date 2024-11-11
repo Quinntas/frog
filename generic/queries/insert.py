@@ -37,4 +37,8 @@ class InsertQuery(Query):
         parameters = ', '.join(['?' for _ in self._values])
 
         query = f"INSERT INTO {self._table.Meta.table_name} ({keys}) VALUES ({parameters})"
+
+        if self._where_condition is not None and isinstance(self._where_condition, Condition):
+            query += f" WHERE {self._where_condition.to_sql()}"
+
         return query, tuple(self._values.values())

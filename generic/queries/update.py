@@ -1,7 +1,6 @@
 from typing import Any
 
 from generic.condition import Condition
-from generic.conditions.eq import EQ
 from generic.connection import Connection
 from generic.field import Field
 from generic.query import Query
@@ -31,8 +30,8 @@ class UpdateQuery(Query):
         query = f"UPDATE {self._table.Meta.table_name} SET {set_clause}"
 
         parameters = list(self._set_values.values())
-        if self._where_condition is not None and isinstance(self._where_condition, EQ):
-            query += f" WHERE {self._where_condition.field.field_name} = ?"
+        if self._where_condition is not None and isinstance(self._where_condition, Condition):
+            query += f" WHERE {self._where_condition.to_sql()}"
             parameters.append(self._where_condition.value)
 
         return query, tuple(parameters)

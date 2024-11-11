@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from generic.conditions.and_condition import and_condition
 from generic.conditions.eq import eq
 from generic.fields.foregin_key import ForeignKey
 from generic.fields.serial import Serial
@@ -40,6 +41,12 @@ print(db.create_tables_from_schema())
 
 query_user = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute
 print(query_user)
+
+query_user_with_and = db.select().from_table(UserTable).where(and_condition(
+    eq(UserTable.id, 1),
+    eq(UserTable.email, 'caio@gmail.com'),
+)).execute
+print(query_user_with_and)
 
 query_user_with_custom_select = db.select({
     "bilau_id": UserTable.id,
