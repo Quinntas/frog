@@ -4,7 +4,7 @@ from generic.condition import Condition
 from generic.conditions.eq import EQ
 from generic.connection import Connection
 from generic.query import Query
-from generic.typings import OptionalSelectedFieldsType, OptionalTableType, OptionalConditionType
+from generic.typings import OptionalSelectedFieldsType, OptionalConditionType, TableType
 from utils.get_fields_from_table import get_fields_from_table
 
 
@@ -16,7 +16,7 @@ class SelectQuery(Query):
         self._limit: Optional[int] = None
         self._offset: Optional[int] = None
 
-    def from_table(self, table: OptionalTableType):
+    def from_table(self, table: TableType):
         self._table = table
         return self
 

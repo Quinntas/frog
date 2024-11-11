@@ -1,7 +1,10 @@
+from typing import Any
+
+from generic.condition import Condition
 from generic.connection import Connection
 from generic.field import Field
 from generic.query import Query
-from generic.typings import OptionalConditionType
+from generic.typings import OptionalConditionType, TableType
 
 
 class InsertQuery(Query):
@@ -10,15 +13,15 @@ class InsertQuery(Query):
         self._where_condition: OptionalConditionType = None
         self._values = {}
 
-    def into(self, table):
+    def into(self, table: TableType):
         self._table = table
         return self
 
-    def values(self, values):
+    def values(self, values: dict[str, Any]):
         self._values = values
         return self
 
-    def where(self, condition):
+    def where(self, condition: Condition):
         self._where_condition = condition
         return self
 

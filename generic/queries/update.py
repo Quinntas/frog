@@ -1,8 +1,11 @@
+from typing import Any
+
 from generic.condition import Condition
 from generic.conditions.eq import EQ
 from generic.connection import Connection
+from generic.field import Field
 from generic.query import Query
-from generic.typings import OptionalTableType, OptionalConditionType
+from generic.typings import OptionalConditionType, TableType
 
 
 class UpdateQuery(Query):
@@ -11,11 +14,11 @@ class UpdateQuery(Query):
         self._set_values = {}
         self._where_condition: OptionalConditionType = None
 
-    def table(self, table: OptionalTableType):
+    def table(self, table: TableType):
         self._table = table
         return self
 
-    def set(self, field, value):
+    def set(self, field: Field, value: Any):
         self._set_values[field] = value
         return self
 
