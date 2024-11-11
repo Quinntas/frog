@@ -5,6 +5,7 @@ from generic.connection import Connection
 from generic.field import Field
 from generic.query import Query
 from generic.typings import OptionalConditionType, TableType
+from utils.get_fields_from_table import get_fields_from_table
 
 
 class InsertQuery(Query):
@@ -27,9 +28,9 @@ class InsertQuery(Query):
 
     def execute(self):
         self._values.update({
-            field.name: field.default_value_fn()
-            for field in self._table.__dict__.values()
-            if isinstance(field, Field) and field.default_value_fn and field.name not in self._values
+            field.field_name: field.default_value_fn()
+            for field in get_fields_from_table(self._table)
+            if isinstance(field, Field) and field.default_value_fn and field.field_name not in self._values
         })
 
         keys = ', '.join(self._values.keys())
