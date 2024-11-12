@@ -14,6 +14,9 @@ class IN(Condition, ABC):
     def to_sql(self) -> str:
         return f"{self.field.field_name_to_sql()} IN ({','.join(['?' for _ in self.values])})"
 
+    def to_value(self) -> tuple[Any]:
+        return self.values,
+
 
 def in_array(field: Field, values: List[Any]):
     return IN(field, values)

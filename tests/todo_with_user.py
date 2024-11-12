@@ -39,25 +39,30 @@ db = Postgres('postgresql://localhost:5432', [
 
 print(db.create_tables_from_schema())
 
-query_user = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute
+query_user = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
 print(query_user)
 
 query_user_with_and = db.select().from_table(UserTable).where(and_condition(
     eq(UserTable.id, 1),
     eq(UserTable.email, 'caio@gmail.com'),
-)).execute
+)).execute()
 print(query_user_with_and)
 
 query_user_with_custom_select = db.select({
     "bilau_id": UserTable.id,
-}).from_table(UserTable).where(eq(UserTable.id, 1)).execute
+}).from_table(UserTable).where(eq(UserTable.id, 1)).execute()
 print(query_user_with_custom_select)
 
-query_all_todos = db.select().from_table(TodoTable).execute
+query_all_todos = db.select().from_table(TodoTable).execute()
 print(query_all_todos)
 
-query_all_todos_with_pagination = db.select().from_table(TodoTable).limit(10).offset(0).execute
+query_all_todos_with_pagination = db.select().from_table(TodoTable).limit(10).offset(0).execute()
 print(query_all_todos_with_pagination)
+
+query_all_todos_with_join = db.select().from_table(TodoTable).right_join(
+    UserTable, eq(TodoTable.user_id, UserTable.id)
+).execute()
+print(query_all_todos_with_join)
 
 insert_user = db.insert().into(UserTable).values({
     'email': 'caio@gmail.com',

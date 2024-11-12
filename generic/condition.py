@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Any
 
 from generic.field import Field
 
@@ -10,4 +10,8 @@ class Condition(ABC):
 
     @abstractmethod
     def to_sql(self) -> str:
+        pass
+
+    @abstractmethod
+    def to_value(self) -> tuple[Any]:
         pass
