@@ -1,5 +1,5 @@
-from abc import ABC
-from typing import List
+from abc import ABC, abstractmethod
+from typing import List, Any
 
 from generic.typings import OptionalSelectedFieldsType, TableType
 from utils.get_fields_from_table import get_fields_from_table
@@ -9,6 +9,22 @@ class Connection(ABC):
     def __init__(self, uri: str, schema: List[TableType]):
         self.uri = uri
         self.schema = schema
+
+    @abstractmethod
+    async def connect(self):
+        pass
+
+    @abstractmethod
+    async def execute(self, query: str, parameters: tuple[Any]):
+        pass
+
+    @abstractmethod
+    async def close(self):
+        pass
+
+    @abstractmethod
+    async def query(self, query: str, parameters: tuple[Any]):
+        pass
 
     def select(self, selected_fields: OptionalSelectedFieldsType = None):
         from generic.queries.select import SelectQuery

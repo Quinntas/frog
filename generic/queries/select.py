@@ -91,4 +91,4 @@ class SelectQuery(Query):
         if self._offset is not None:
             query += f" OFFSET {self._offset}"
 
-        return query, parameters
+        return self._connection.query(query, parameters)
