@@ -20,14 +20,22 @@ class Field:
         self.nullable: bool = nullable
         self.table: Optional['Table'] = table
         self.default_value_fn: Optional[Callable[[], Any]] = None
-        self.primary_key: bool = primary_key
+        self._primary_key: bool = primary_key
         self.reference: Optional['Field'] = reference
+
+    def not_null(self):
+        self.nullable = False
+        return self
+
+    def primary_key(self):
+        self._primary_key = True
+        return self
 
     def to_sql(self) -> str:
         field_sql = f"{self.field_name} {self.field_type}"
         if not self.nullable:
             field_sql += " NOT NULL"
-        if self.primary_key:
+        if self._primary_key:
             field_sql += " PRIMARY KEY"
         if self.reference:
             field_sql += f" REFERENCES {self.reference.field_name_to_sql()})"

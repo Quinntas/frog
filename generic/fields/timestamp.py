@@ -5,10 +5,8 @@ class Timestamp(Field):
     def __init__(self,
                  field_name: str,
                  auto_now_add: bool = False,
-                 nullable: bool = False
                  ) -> None:
         super().__init__(
             field_name=field_name,
             field_type=f'TIMESTAMP {"DEFAULT CURRENT_TIMESTAMP" if auto_now_add else ""}',
-            nullable=nullable
         )

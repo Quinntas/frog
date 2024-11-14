@@ -11,22 +11,22 @@ from postgres.pg_connection import Postgres
 
 
 class UserTable(Table):
-    id = Serial('id', primary_key=True, nullable=False)
-    pid = Varchar('pid', 255, nullable=False).default(uuid4().__str__)
-    email = Varchar('email', 255, nullable=False)
-    password = Varchar('password', 255, nullable=False)
-    created_at = Timestamp('created_at', auto_now_add=True, nullable=False)
+    id = Serial('id').primary_key().not_null()
+    pid = Varchar('pid', 255).default(uuid4().__str__).not_null()
+    email = Varchar('email', 255).not_null()
+    password = Varchar('password', 255).not_null()
+    created_at = Timestamp('created_at', auto_now_add=True).not_null()
 
     class Meta:
         table_name = 'users'
 
 
 class TodoTable(Table):
-    id = Serial('id', primary_key=True, nullable=False)
-    pid = Varchar('pid', 255, nullable=False).default(uuid4().__str__)
-    title = Varchar('title', 255, nullable=False)
-    user_id = ForeignKey('user_id', UserTable.id, nullable=False)
-    created_at = Timestamp('created_at', auto_now_add=True, nullable=False)
+    id = Serial('id').primary_key().not_null()
+    pid = Varchar('pid', 255).default(uuid4().__str__).not_null()
+    title = Varchar('title', 255).not_null()
+    user_id = ForeignKey('user_id', UserTable.id).not_null()
+    created_at = Timestamp('created_at', auto_now_add=True).not_null()
 
     class Meta:
         table_name = 'todos'
