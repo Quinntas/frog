@@ -40,7 +40,7 @@ db = Postgres('postgresql://localhost:5432', [
 print(db.create_tables_from_schema())
 
 query_user = db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
-print(query_user)
+print(query_user[0])
 
 query_user_with_and = db.select().from_table(UserTable).where(and_condition(
     eq(UserTable.id, 1),

@@ -6,9 +6,10 @@ from generic.field import Field
 class TableMeta(type):
     def __new__(cls, name, bases, dct):
         table_class = super().__new__(cls, name, bases, dct)
-        for attr_name, attr_value in dct.items():
-            if isinstance(attr_value, Field):
-                attr_value.table = table_class
+        [
+            setattr(table_class, attr_name, attr_value)
+            for attr_name, attr_value in dct.items() if isinstance(attr_value, Field)
+        ]
         return table_class
 
 

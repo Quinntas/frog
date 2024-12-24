@@ -24,7 +24,6 @@ class SelectQuery(Query):
         self._where_condition: OptionalConditionType = None
         self._limit: Optional[int] = None
         self._offset: Optional[int] = None
-
         self._joins: list[tuple[JoinType, TableType, EQ]] = []
 
     def from_table(self, table: TableType):
@@ -59,7 +58,10 @@ class SelectQuery(Query):
         self._joins.append((JoinType.FULL, table, on))
         return self
 
-    def execute(self):
+    async def execute(self) -> list[dict]:
+        if not self._table:
+            raise ValueError("No table specified. Call from_table() first.")
+
         table_name = self._table.Meta.table_name
 
         selected_fields = (
@@ -91,4 +93,4 @@ class SelectQuery(Query):
         if self._offset is not None:
             query += f" OFFSET {self._offset}"
 
-        return self._connection.query(query, parameters)
+        return await self._connection.query(query, parameters)
