@@ -12,7 +12,7 @@ class BETWEEN(Condition, ABC):
         self.upper_value = upper_value
 
     def to_sql(self) -> str:
-        return f"{self.field.field_name_to_sql()} BETWEEN ? AND ?"
+        return f"{self.field.field_name_to_sql()} BETWEEN %s AND %s"
 
     def to_value(self) -> tuple[Any, Any]:
         return self.lower_value, self.upper_value

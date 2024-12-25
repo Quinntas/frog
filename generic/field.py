@@ -10,6 +10,7 @@ class Field:
     def __init__(self,
                  field_name: str,
                  field_type: str,
+                 python_type: type,
                  nullable: bool = False,
                  primary_key: bool = False,
                  reference: Optional['Field'] = None,
@@ -22,6 +23,7 @@ class Field:
         self.default_value_fn: Optional[Callable[[], Any]] = None
         self._primary_key: bool = primary_key
         self.reference: Optional['Field'] = reference
+        self.python_type: type = python_type
 
     def not_null(self):
         self.nullable = False
@@ -38,7 +40,7 @@ class Field:
         if self._primary_key:
             field_sql += " PRIMARY KEY"
         if self.reference:
-            field_sql += f" REFERENCES {self.reference.field_name_to_sql()})"
+            field_sql += f" REFERENCES {self.reference.field_name_to_sql()}"
         return field_sql
 
     def field_name_to_sql(self) -> str:

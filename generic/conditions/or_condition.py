@@ -13,10 +13,7 @@ class OrCondition(Condition, ABC):
         return f"({' OR '.join([condition.to_sql() for condition in self._conditions])})"
 
     def to_value(self) -> tuple[Any]:
-        return_tuple = tuple()
-        for condition in self._conditions:
-            return_tuple += condition.to_value()
-        return return_tuple
+        return sum((condition.to_value() for condition in self._conditions), ())
 
 
 def or_condition(*conditions: Condition) -> OrCondition:

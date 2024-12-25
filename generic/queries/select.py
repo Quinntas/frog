@@ -7,7 +7,6 @@ from generic.connection import Connection
 from generic.field import Field
 from generic.query import Query
 from generic.typings import OptionalSelectedFieldsType, OptionalConditionType, TableType
-from utils.get_fields_from_table import get_fields_from_table
 
 
 class JoinType(Enum):
@@ -58,32 +57,31 @@ class SelectQuery(Query):
         self._joins.append((JoinType.FULL, table, on))
         return self
 
-    async def execute(self) -> list[dict]:
+    async def execute(self):
         if not self._table:
             raise ValueError("No table specified. Call from_table() first.")
 
         table_name = self._table.Meta.table_name
-
-        selected_fields = (
-            [field.field_name for field in get_fields_from_table(self._table)]
-            if self._selected_fields is None
-            else [
-                f"{field.field_name_to_sql()} as {field_alias}"
-                for field_alias, field in self._selected_fields.items()
-            ]
-        )
+        selected_fields = [
+            f"{field.field_name_to_sql()} as {field_alias}"
+            for field_alias, field in self._selected_fields.items()
+        ]
 
         query = f"SELECT {', '.join(selected_fields)} FROM {table_name}"
 
-        parameters = tuple()
-
         if self._where_condition is not None and isinstance(self._where_condition, Condition):
-            query += f" WHERE {self._where_condition.to_sql()}"
-            parameters += self._where_condition.to_value()
+            where_sql = self._where_condition.to_sql()
+            param_count = where_sql.count('%s')
+            for i in range(param_count):
+                where_sql = where_sql.replace('%s', f'${i + 1}', 1)
+            query += f" WHERE {where_sql}"
+            parameters = self._where_condition.to_value()
+        else:
+            parameters = ()
 
-        if len(self._joins) > 0:
+        if self._joins:
             for join_type, table, on in self._joins:
-                if isinstance(on.value, Field) is not True:
+                if not isinstance(on.value, Field):
                     raise TypeError("The value of the on condition must be a Field")
                 query += f" {join_type.value} JOIN {table.Meta.table_name} ON {on.field.field_name_to_sql()} = {on.value.field_name_to_sql()}"
 
@@ -93,4 +91,6 @@ class SelectQuery(Query):
         if self._offset is not None:
             query += f" OFFSET {self._offset}"
 
-        return await self._connection.query(query, parameters)
+        query += ";"
+
+        return await self._connection.query(query, *parameters)

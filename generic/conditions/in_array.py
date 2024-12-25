@@ -12,7 +12,7 @@ class IN(Condition, ABC):
         self.values = values
 
     def to_sql(self) -> str:
-        return f"{self.field.field_name_to_sql()} IN ({','.join(['?' for _ in self.values])})"
+        return f"{self.field.field_name_to_sql()} IN ({','.join(['%s' for _ in self.values])})"
 
     def to_value(self) -> tuple[Any]:
         return self.values,

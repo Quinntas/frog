@@ -9,4 +9,5 @@ class Varchar(Field):
         super().__init__(
             field_name=field_name,
             field_type=f'VARCHAR({length})',
+            python_type=str,
         )

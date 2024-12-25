@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from generic.field import Field
 
 
@@ -9,4 +11,5 @@ class Timestamp(Field):
         super().__init__(
             field_name=field_name,
             field_type=f'TIMESTAMP {"DEFAULT CURRENT_TIMESTAMP" if auto_now_add else ""}',
+            python_type=datetime,
         )

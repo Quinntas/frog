@@ -10,4 +10,5 @@ class ForeignKey(Field):
             field_name=field_name,
             field_type=field.field_type,
             reference=field,
+            python_type=field.python_type,
         )

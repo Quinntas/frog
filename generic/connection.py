@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Any
 
-from generic.typings import OptionalSelectedFieldsType, TableType
+from generic.typings import TableType, SelectedFieldsType
 from utils.get_fields_from_table import get_fields_from_table
 
 
@@ -23,10 +23,10 @@ class Connection(ABC):
         pass
 
     @abstractmethod
-    async def query(self, query: str, parameters: tuple[Any]):
+    async def query(self, query: str, *args):
         pass
 
-    def select(self, selected_fields: OptionalSelectedFieldsType = None):
+    def select(self, selected_fields: SelectedFieldsType):
         from generic.queries.select import SelectQuery
         return SelectQuery(self, selected_fields)
 

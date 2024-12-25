@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from connections.asyncpg_connection import Postgres
 from generic.conditions.and_condition import and_condition
 from generic.conditions.eq import eq
 from generic.fields.foregin_key import ForeignKey
@@ -7,7 +8,6 @@ from generic.fields.serial import Serial
 from generic.fields.timestamp import Timestamp
 from generic.fields.varchar import Varchar
 from generic.table import Table
-from postgres.pg_connection import Postgres
 
 
 class UserTable(Table):

@@ -7,7 +7,7 @@ from generic.connection import Connection
 from generic.typings import TableType
 
 
-class Postgres(Connection, ABC):
+class AsyncPG(Connection, ABC):
     def __init__(self, uri: str, schema: Optional[List[TableType]] = None):
         super().__init__(uri, schema or [])
         self.pool = None
@@ -17,12 +17,12 @@ class Postgres(Connection, ABC):
             raise RuntimeError("Database already connected. Call close() first.")
         self.pool = await asyncpg.create_pool(self.uri)
 
-    async def query(self, query: str, parameters: tuple[Any] = ()) -> List[dict]:
+    async def query(self, query: str, *args):
         if not self.pool:
             raise RuntimeError("Database not connected. Call connect() first.")
 
         async with self.pool.acquire() as conn:
-            records = await conn.fetch(query, *parameters)
+            records = await conn.fetch(query, *args)
             return [dict(r) for r in records]
 
     async def transaction(self):

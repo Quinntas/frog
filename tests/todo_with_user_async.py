@@ -1,12 +1,12 @@
 import asyncio
-from operator import eq
 from uuid import uuid4
 
+from connections.asyncpg_connection import AsyncPG
+from generic.conditions.eq import eq
 from generic.fields.serial import Serial
 from generic.fields.timestamp import Timestamp
 from generic.fields.varchar import Varchar
 from generic.table import Table
-from postgres.pg_connection import Postgres
 
 
 class UserTable(Table):
@@ -20,7 +20,7 @@ class UserTable(Table):
         table_name = 'users'
 
 
-db = Postgres('postgresql://root:rootpwd@localhost:5432/test', [
+db = AsyncPG('postgresql://root:rootpwd@localhost:5432/test', [
     UserTable,
 ])
 
@@ -28,7 +28,11 @@ db = Postgres('postgresql://root:rootpwd@localhost:5432/test', [
 async def main():
     await db.connect()
 
-    result = await db.select().from_table(UserTable).where(eq(UserTable.id, 1)).execute()
+    result = await db.select({
+        "id": UserTable.id,
+        "email": UserTable.email,
+        "created_at": UserTable.created_at,
+    }).from_table(UserTable).where(eq(UserTable.id, 2)).execute()
 
     if len(result) > 0:
         user = result[0]

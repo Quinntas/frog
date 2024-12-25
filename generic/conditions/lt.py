@@ -12,7 +12,7 @@ class LT(Condition, ABC):
         self.value = value
 
     def to_sql(self) -> str:
-        return f"{self.field.field_name_to_sql()} < ?"
+        return f"{self.field.field_name_to_sql()} < %s"
 
     def to_value(self) -> tuple[Any]:
         return self.value,
